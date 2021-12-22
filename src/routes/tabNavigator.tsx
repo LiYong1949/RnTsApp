@@ -1,8 +1,8 @@
 
 import React from 'react';
+import { useColorScheme } from 'react-native';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import AntDesignIcons from 'react-native-vector-icons/AntDesign';
-//主导航页面
 import HomeScreen from '@/pages/home';
 import CategoryScreen from '@/pages/category';
 import ShoppingCartScreen from '@/pages/shoppingCart';
@@ -23,14 +23,14 @@ const tabs = [
     title: '分类',
     icon: 'bars',
     screen: CategoryScreen,
-    headerShown: true,
+    headerShown: false,
   },
   {
     name: 'ShoppingCart',
     title: '购物车',
     icon: 'shoppingcart',
     screen: ShoppingCartScreen,
-    headerShown: true,
+    headerShown: false,
   },
   {
     name: 'My',
@@ -42,9 +42,12 @@ const tabs = [
 ];
 
 const TabNavigator = () => {
+
+  const colorScheme = useColorScheme();
+
   return (
     <Tab.Navigator
-      initialRouteName='ShoppingCart'
+      initialRouteName='Home'
       backBehavior='none'
     >
       {
@@ -55,12 +58,14 @@ const TabNavigator = () => {
             component={tab.screen}
             options={{
               tabBarLabel: tab.title,
+              headerTitle: tab.title,
+              headerTintColor: colorScheme === 'dark' ? '#ffffff' : '#000000',
               headerShown: tab.headerShown,
               tabBarIcon: ({ focused }) => (
-                <AntDesignIcons name={tab.icon} size={26} color={focused ? '#ff3141' : '#000000'} />
+                <AntDesignIcons name={tab.icon} size={26} color={focused ? '#ff3141' : (colorScheme === 'dark' ? '#ffffff' : '#000000')} />
               ),
               tabBarActiveTintColor: '#ff3141',
-              tabBarInactiveTintColor: '#000000',
+              tabBarInactiveTintColor: colorScheme === 'dark' ? '#ffffff' : '#000000',
             }}
           />;
         })

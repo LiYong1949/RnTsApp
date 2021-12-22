@@ -9,8 +9,6 @@ const baseWaitTime = 100; // 默认的等待时间100毫秒
 
 const requestURLRate: Array<Object> = []; // 如：{ api: '/api/standardRoles', timestamp: 1596597701181 }
 
-declare let global: any;
-
 export type Method =
   | 'get' | 'GET'
   | 'delete' | 'DELETE'
@@ -66,21 +64,23 @@ export default function axiosRequest(api: string, method: Method = 'GET', params
 
   }
 
-  return new Promise((resolve: any, reject: any) => {
+  return new Promise(async (resolve: any, reject: any) => {
+
+    let token = await G_LOCALSTORAGE_GET('_TOKEN');
 
     let sendData: any = {
       method,
-      url: api.includes('upload') ? global.G_CONFIG.serverHost + '/' + api : api,
+      url: G_CONFIG.serverHost + api,
       headers: {
         ...headers,
-        'Authorization': 'Bearer ' + global.G_LOCALSTORAGE_GET('_TOKEN')
+        'Authorization': 'Bearer ' + token
       },
       params: method === 'GET' ? params : {},
       data: params
     };
 
     axios(sendData)
-      .then((res:any) => {
+      .then((res: any) => {
 
         let newData = res.data;
 
@@ -98,9 +98,11 @@ export default function axiosRequest(api: string, method: Method = 'GET', params
 
           // 直接跳转到登录页面（简单粗暴）
           if (errcode === -401 || errcode === 2) {
-            if (global._PROPS) {
-              global._PROPS.history.push('/login');
+            if (_PROPS) {
+              const { navigate } = _PROPS.navigation;
+              navigate('/login');
             } else {
+              Toast.fail('登录失效！', 1);
             }
             reject(newData);
           }
@@ -119,5 +121,7 @@ export default function axiosRequest(api: string, method: Method = 'GET', params
         reject(error);
 
       });
+  }).catch((error: any) => {
+    throw new Error(error);
   });
 }

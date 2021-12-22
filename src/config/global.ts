@@ -1,12 +1,13 @@
 import dayjs from 'dayjs';
-import AsyncStorage from '@react-native-community/async-storage';
-import { Platform } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Platform, Appearance } from 'react-native';
 
-const global:any = {};
+
+const _PROPS = {};
 /**
  * 通用配置
  */
-global.G_CONFIG = {
+const G_CONFIG = {
   serverHost: 'http://tct-site-safety-test.app.funenc.com',
   docHost: 'http://docs.cq-tct.com',                       // 文件存储服务地址
   filePreviewServiceHost: 'http://fps.funenc.xyz:2112',    // 文件预览服务地址
@@ -16,27 +17,14 @@ global.G_CONFIG = {
   maxUploadSize: 104857600, // 文件上传最大限制100MB
   // enum: enumConfig,         // 枚举值
   isIOS: Platform.OS === 'ios',
-  isAndroid: Platform.OS === 'android'
+  isAndroid: Platform.OS === 'android',
+  componentBackgroundColor: Appearance.getColorScheme() === 'dark' ? '#000000' : '#ffffff'
 };
-
-/**
- * 附件根据URL获取文件名
- * 文件格式：tct/ssm/202108020121212/XXX.pdf
- * @param fileUrl 文件地址
- * @returns
- */
-global.G_SPLIT_URL_FILENAME = (fileUrl: any) => {
-
-  let orginFileName = fileUrl.split('/')[fileUrl.split('/').length - 1]; // 获取文件名，格式：tct/ssm/202108020121212/XXX.pdf
-
-  return orginFileName;
-};
-
 
 /**
  * 处理本地信息（删除）
  */
-global.G_LOCALSTORAGE_REMOVE = async (name: any) => {
+const G_LOCALSTORAGE_REMOVE = async (name: string) => {
 
   await AsyncStorage.removeItem(name);
 
@@ -45,18 +33,24 @@ global.G_LOCALSTORAGE_REMOVE = async (name: any) => {
 /**
  * 处理本地信息（清理）
  */
-global.G_LOCALSTORAGE_CLEAR = async () => {
-
-  await AsyncStorage.clear();
+const G_LOCALSTORAGE_CLEAR = async () => {
+  const asyncStorageKeys = await AsyncStorage.getAllKeys();
+  if (asyncStorageKeys.length > 0) {
+    if (Platform.OS === 'android') {
+      await AsyncStorage.clear();
+    } else if (Platform.OS === 'ios') {
+      await AsyncStorage.multiRemove(asyncStorageKeys);
+    }
+  }
 
 };
 
 /**
  * 处理本地信息（读）
  */
-global.G_LOCALSTORAGE_GET = async (name: any) => {
+const G_LOCALSTORAGE_GET = async (name: string) => {
 
-  let dataStr = await AsyncStorage.getItem(name);
+  const dataStr = await AsyncStorage.getItem(name);
   let hash = {};
 
   if (dataStr) {
@@ -66,8 +60,8 @@ global.G_LOCALSTORAGE_GET = async (name: any) => {
 
       hash = JSON.parse(dataStr);
 
-      let { data }: any = hash;
-      let newData = data;
+      const { data }: any = hash;
+      const newData = data;
 
       return newData;
 
@@ -88,9 +82,9 @@ global.G_LOCALSTORAGE_GET = async (name: any) => {
  * @param datas 数据体
  * @returns
  */
-global.G_LOCALSTORAGE_SET = async (name: string, datas: any) => {
+const G_LOCALSTORAGE_SET = async (name: string, datas: any) => {
 
-  let saveData = {
+  const saveData = {
     data: datas
   };
 
@@ -101,7 +95,7 @@ global.G_LOCALSTORAGE_SET = async (name: string, datas: any) => {
 };
 
 // 时间格式化
-global.G_DATE_FORMAT = (time: any, type: string, defaultValue: any) => {
+const G_DATE_FORMAT = (time: any, type: string, defaultValue: any) => {
   if (time) {
     if (type === 'fullTimes') {
       return dayjs(time).format('YYYY-MM-DD HH:mm:ss');
@@ -123,4 +117,12 @@ global.G_DATE_FORMAT = (time: any, type: string, defaultValue: any) => {
   }
 };
 
-export default global;
+export default {
+  _PROPS,
+  G_CONFIG,
+  G_LOCALSTORAGE_REMOVE,
+  G_LOCALSTORAGE_CLEAR,
+  G_LOCALSTORAGE_GET,
+  G_LOCALSTORAGE_SET,
+  G_DATE_FORMAT
+};

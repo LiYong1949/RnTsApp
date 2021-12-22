@@ -1,5 +1,6 @@
 
 import { observable, action, makeObservable, runInAction } from 'mobx';
+import { Appearance } from 'react-native';
 import api from '../services/api';
 
 declare let global: any;
@@ -12,6 +13,7 @@ class AppStore {
   @observable public standardPosts: Array<any> = [];                                                // 全部标准岗位
   @observable public qiniuToken: string = '';                                                       // 七牛token
   @observable public selectedProject: any = null;                                                   // 当前选中项目
+  @observable public colorScheme = Appearance.getColorScheme()                                      // 当前颜色主题
 
   constructor() {
     makeObservable(this); // 需要observable的值，默认全部（mobx6引入）
