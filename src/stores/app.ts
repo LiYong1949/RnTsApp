@@ -60,10 +60,10 @@ class AppStore {
  */
   @action.bound
   async handleSetCurrentUserInfo(userInfo: any) {
-    if (userInfo) {
-      await G_LOCALSTORAGE_SET('_USER_INFO', userInfo);
+    await G_LOCALSTORAGE_SET('_USER_INFO', userInfo);
+    runInAction(() => {
       this.currentUserInfo = userInfo;
-    }
+    });
   }
 
 }

@@ -1,5 +1,5 @@
 import React, { Component } from "react";
-import { View, ScrollView, Image, StyleSheet, RefreshControl } from 'react-native';
+import { View, ScrollView, Image, StyleSheet, RefreshControl, TouchableOpacity } from 'react-native';
 import { Text } from '@/components/reactNative';
 import { Flex, List } from '@ant-design/react-native';
 import { inject, observer } from 'mobx-react';
@@ -10,7 +10,6 @@ import api from "@/services/api";
 
 export interface IStates {
   isRefreshing: boolean,
-  userInfo: any,
   list: Array<any>,
 }
 
@@ -21,11 +20,9 @@ class Home extends Component<any, IStates>{
   constructor(props: any) {
     super(props);
 
-    const { appStore } = this.props;
 
     this.state = {
       isRefreshing: false,
-      userInfo: appStore.currentUserInfo,
       list: [
         {
           title: '地址管理',
@@ -59,17 +56,12 @@ class Home extends Component<any, IStates>{
 
   // 获取当前人员信息
   handleGetCurrentUserInfo = async () => {
-    let userInfo = await G_LOCALSTORAGE_GET('_USER_INFO');
+    const { appStore } = this.props;
 
-    if (!userInfo) {
-      let res: any = await api.getUser();
-      if (res.errcode === 0) {
-        userInfo = res.data;
-
-        await G_LOCALSTORAGE_SET('_USER_INFO', res.data);
-      }
+    let res: any = await api.getUser();
+    if (res.errcode === 0) {
+      await appStore.handleSetCurrentUserInfo(res.data);
     }
-    this.setState({ userInfo: userInfo });
   }
 
   // 跳转
@@ -78,9 +70,20 @@ class Home extends Component<any, IStates>{
     navigation.navigate(url);
   }
 
+  handleLinkUser = () => {
+    const { appStore, navigation } = this.props;
+    if (appStore.currentUserInfo) {
+      navigation.navigate('UserInfoDetail');
+    } else {
+      navigation.navigate('Login');
+    }
+  }
+
   render() {
 
-    const { userInfo, list, isRefreshing } = this.state;
+    let { currentUserInfo } = this.props.appStore;
+
+    const { list, isRefreshing } = this.state;
 
     return (
       <ScrollView
@@ -94,22 +97,24 @@ class Home extends Component<any, IStates>{
         <View style={styles.avatarPanel}>
           <Flex>
             <Flex.Item>
-              {
-                userInfo ? (
-                  userInfo.avatar ?
-                    <Image style={styles.avatar} source={{ uri: userInfo?.avatar }} /> :
+              <TouchableOpacity onPress={this.handleLinkUser}>
+                {
+                  currentUserInfo ? (
+                    currentUserInfo.avatar ?
+                      <Image style={styles.avatar} source={{ uri: currentUserInfo?.avatar }} /> :
+                      <View style={styles.noAvatar}>
+                        <Text style={styles.noAvatarText}>
+                          {currentUserInfo.name ? currentUserInfo.name.substr(currentUserInfo.name.length - 2) : '佚名'}
+                        </Text>
+                      </View>
+                  ) :
                     <View style={styles.noAvatar}>
-                      <Text style={styles.noAvatarText}>
-                        {userInfo.name ? userInfo.name.substr(userInfo.name.length - 2) : '佚名'}
-                      </Text>
+                      <Text style={styles.unLoginText}>点击登录</Text>
                     </View>
-                ) :
-                  <View>
-                    <Text style={styles.avatar}>点击登录</Text>
-                  </View>
-              }
+                }
+              </TouchableOpacity>
             </Flex.Item>
-            <Flex.Item><Text>{userInfo?.name || '未登录'}</Text></Flex.Item>
+            <Flex.Item><Text>{currentUserInfo?.name || '未登录'}</Text></Flex.Item>
           </Flex>
         </View>
 
@@ -154,6 +159,14 @@ const styles = StyleSheet.create({
     lineHeight: 100,
     textAlign: 'center',
     fontSize: 25,
+    color: '#f56a00',
+  },
+  unLoginText: {
+    width: '100%',
+    height: '100%',
+    lineHeight: 100,
+    textAlign: 'center',
+    fontSize: 20,
     color: '#f56a00',
   },
   listIcon: {

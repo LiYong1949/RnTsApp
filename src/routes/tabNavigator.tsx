@@ -33,7 +33,7 @@ const tabs = [
     headerShown: false,
   },
   {
-    name: 'My',
+    name: 'UserInfo',
     title: '我的',
     icon: 'user',
     screen: MyScreen,

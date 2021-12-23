@@ -11,8 +11,6 @@ const Text: React.FC<TextProps> = (props) => {
   const colorScheme = useColorScheme();
   const { style, ...otherProps } = props;
   if (style && Object.keys(style).includes('color')) {
-    console.log(style);
-
     return <DefaultText {...props} />;
   } else {
     return <DefaultText style={{ color: colorScheme === 'dark' ? 'white' : 'black' }}  {...otherProps} />;

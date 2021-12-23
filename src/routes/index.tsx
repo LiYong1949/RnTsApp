@@ -7,6 +7,7 @@ import { getFocusedRouteNameFromRoute, NavigationContainer, useNavigation, DarkT
 import AntDesignIcons from 'react-native-vector-icons/AntDesign';
 import TabNavigator from './tabNavigator';
 import LoginScreen from '@/pages/common/login';
+import UserInfoDetailScreen from '@/pages/user/detail';
 import AddressManagerScreen from '../pages/user/adress';
 import OrderScreen from '../pages/user/order';
 import SettingSreen from '@/pages/user/setting';
@@ -26,6 +27,12 @@ const router = [
     title: "登录",
     component: LoginScreen,
     headerShown: false,
+  },
+  {
+    name: "UserInfoDetail",
+    title: "个人信息",
+    component: UserInfoDetailScreen,
+    headerShown: true,
   },
   {
     name: "AddressManager",

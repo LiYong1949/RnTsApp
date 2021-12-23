@@ -1,8 +1,11 @@
 import React from "react";
 import { StyleSheet, View } from 'react-native';
 import { Button, List, Modal } from '@ant-design/react-native';
+import { observer, inject } from 'mobx-react';
 
 const Home = (props: any) => {
+  const { appStore } = props;
+
   const list = [
     {
       title: '关于',
@@ -21,6 +24,7 @@ const Home = (props: any) => {
     }, {
       text: '确定',
       onPress: async () => {
+        await appStore.handleSetCurrentUserInfo();
         await G_LOCALSTORAGE_CLEAR();
         const { navigate } = props.navigation;
         navigate('Login');
@@ -54,4 +58,4 @@ const styles = StyleSheet.create({
   }
 });
 
-export default Home;
+export default inject('appStore')(observer(Home));
