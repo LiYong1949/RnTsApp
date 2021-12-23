@@ -7,19 +7,19 @@ const Home = (props: any) => {
     {
       title: '关于',
     }, {
-      title: '清除缓存'
+      title: '清除缓存',
     }
   ];
 
+
+  // 登出
   const handleLogout = () => {
 
     Modal.alert('退出登录', '确认退出登录？', [{
       text: '取消',
-      style: 'cancel',
       onPress: () => console.log('cancel')
     }, {
       text: '确定',
-      style: 'ok',
       onPress: async () => {
         await G_LOCALSTORAGE_CLEAR();
         const { navigate } = props.navigation;
@@ -45,7 +45,7 @@ const Home = (props: any) => {
 
 const styles = StyleSheet.create({
   settingContainer: {
-    minHeight: '100%',
+    height: '100%',
   },
   logout: {
     position: 'absolute',

@@ -1,5 +1,7 @@
 import React from 'react';
 import { TouchableOpacity, useColorScheme } from 'react-native';
+import { Provider } from 'mobx-react';
+import stores from '@/stores';
 import { createStackNavigator } from '@react-navigation/stack';
 import { getFocusedRouteNameFromRoute, NavigationContainer, useNavigation, DarkTheme, DefaultTheme } from '@react-navigation/native';
 import AntDesignIcons from 'react-native-vector-icons/AntDesign';
@@ -51,7 +53,7 @@ const HeaderLeft = () => {
 
   return (
     <TouchableOpacity onPress={() => { navigation.canGoBack() && navigation.goBack(); }}>
-      <AntDesignIcons name='left' size={20} color={useColorScheme() === 'dark' ? 'white' : 'black'} />
+      <AntDesignIcons name='left' size={25} color={useColorScheme() === 'dark' ? 'white' : 'black'} />
     </TouchableOpacity>
   );
 };
@@ -65,24 +67,26 @@ const StackNavigator = () => {
   };
 
   return (
-    <NavigationContainer theme={useColorScheme() === 'dark' ? DarkTheme : DefaultTheme}>
-      <Stack.Navigator initialRouteName='/'
-      >
-        {
-          router.map((item, index) => {
-            return (
-              <Stack.Screen key={index} name={item.name} component={item.component} options={({ route }) => ({
-                title: getChildTitle(route) || item.title,
-                headerTitle: getChildTitle(route) || item.title,
-                headerLeft: HeaderLeft,
-                headerLeftLabelVisible: false, // 不显示header左侧文字
-                headerShown: item.headerShown, // 是否显示头部标题
-              })} />
-            );
-          })
-        }
-      </Stack.Navigator>
-    </NavigationContainer>
+    <Provider {...stores}>
+      <NavigationContainer theme={useColorScheme() === 'dark' ? DarkTheme : DefaultTheme}>
+        <Stack.Navigator initialRouteName='/'
+        >
+          {
+            router.map((item, index) => {
+              return (
+                <Stack.Screen key={index} name={item.name} component={item.component} options={({ route }) => ({
+                  title: getChildTitle(route) || item.title,
+                  headerTitle: getChildTitle(route) || item.title,
+                  headerLeft: HeaderLeft,
+                  headerLeftLabelVisible: false, // 不显示header左侧文字
+                  headerShown: item.headerShown, // 是否显示头部标题
+                })} />
+              );
+            })
+          }
+        </Stack.Navigator>
+      </NavigationContainer>
+    </Provider>
   );
 };
 

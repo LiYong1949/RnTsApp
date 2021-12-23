@@ -10,7 +10,7 @@ class Home extends Component<any, IStates>{
   constructor(props: any) {
     super(props);
 
-
+    _PROPS = props;
     this.state = {
 
     };

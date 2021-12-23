@@ -59,13 +59,13 @@ const TabNavigator = () => {
             options={{
               tabBarLabel: tab.title,
               headerTitle: tab.title,
-              headerTintColor: colorScheme === 'dark' ? '#ffffff' : '#000000',
+              headerTintColor: colorScheme === 'dark' ? 'white' : 'black',
               headerShown: tab.headerShown,
               tabBarIcon: ({ focused }) => (
-                <AntDesignIcons name={tab.icon} size={26} color={focused ? '#ff3141' : (colorScheme === 'dark' ? '#ffffff' : '#000000')} />
+                <AntDesignIcons name={tab.icon} size={26} color={focused ? '#ff3141' : (colorScheme === 'dark' ? 'white' : 'black')} />
               ),
               tabBarActiveTintColor: '#ff3141',
-              tabBarInactiveTintColor: colorScheme === 'dark' ? '#ffffff' : '#000000',
+              tabBarInactiveTintColor: colorScheme === 'dark' ? 'white' : 'black',
             }}
           />;
         })

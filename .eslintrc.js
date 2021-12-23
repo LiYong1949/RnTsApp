@@ -12,11 +12,12 @@ module.exports = {
     'spaced-comment': [2, 'always', {
       'markers': ['global', 'globals', 'eslint', 'eslint-disable', '*package', '!']
     }],
-    'react-native/no-inline-styles':'off'
+    'react-native/no-inline-styles': 'off'
   },
   globals: {
     _PROPS: "writable",
     G_CONFIG: "readonly",
+    G_HTTP_WHITELIST: "readonly",
     G_LOCALSTORAGE_CLEAR: "writable",
     G_LOCALSTORAGE_GET: "writable",
     G_LOCALSTORAGE_SET: "writable",

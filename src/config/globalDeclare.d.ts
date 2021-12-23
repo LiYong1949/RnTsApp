@@ -4,6 +4,7 @@ export { };
 declare global{
   var _PROPS: any;
   var G_CONFIG: any;
+  var G_HTTP_WHITELIST: Array<string>;
   var G_LOCALSTORAGE_REMOVE: (name: string) => void;
   var G_LOCALSTORAGE_CLEAR: () => void;
   var G_LOCALSTORAGE_GET: (name: string) => any;

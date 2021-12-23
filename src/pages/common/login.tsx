@@ -1,6 +1,7 @@
 import React, { Component } from "react";
 import { StyleSheet, Text, View } from 'react-native';
 import { List, InputItem, Button, Toast } from '@ant-design/react-native';
+import { inject, observer } from 'mobx-react';
 import api from '@/services/api';
 
 export interface IStates {
@@ -8,6 +9,8 @@ export interface IStates {
   password: string,
 }
 
+@inject("appStore")
+@observer
 class Home extends Component<any, IStates>{
   constructor(props: any) {
     super(props);
@@ -21,15 +24,15 @@ class Home extends Component<any, IStates>{
   // 登录
   handleLogin = async () => {
 
-    const { navigation } = this.props;
+    const { navigation, appStore } = this.props;
     const { account, password } = this.state;
     if (!account && !password) {
       return Toast.fail('账号或密码不能为空！');
     }
     let res: any = await api.login(Object.assign({ login: account, password }));
     if (res.errcode === 0) {
-      await G_LOCALSTORAGE_SET('_TOKEN',res.data?.accessToken);
-      await G_LOCALSTORAGE_SET('_USER_INFO', res.data);
+      await G_LOCALSTORAGE_SET('_TOKEN', res.data?.accessToken);
+      await appStore.handleSetCurrentUserInfo(res.data);
       Toast.success('登录成功！', 1);
 
       navigation.goBack();

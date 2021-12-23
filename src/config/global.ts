@@ -1,9 +1,9 @@
 import dayjs from 'dayjs';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import { Platform, Appearance } from 'react-native';
+import { Platform } from 'react-native';
 
 
-const _PROPS = {};
+const _PROPS = null;
 /**
  * 通用配置
  */
@@ -18,8 +18,10 @@ const G_CONFIG = {
   // enum: enumConfig,         // 枚举值
   isIOS: Platform.OS === 'ios',
   isAndroid: Platform.OS === 'android',
-  componentBackgroundColor: Appearance.getColorScheme() === 'dark' ? '#000000' : '#ffffff'
 };
+
+// 请求白名单（不需强制登录）
+const G_HTTP_WHITELIST = ['/api/web/jwt/login'];
 
 /**
  * 处理本地信息（删除）
@@ -120,6 +122,7 @@ const G_DATE_FORMAT = (time: any, type: string, defaultValue: any) => {
 export default {
   _PROPS,
   G_CONFIG,
+  G_HTTP_WHITELIST,
   G_LOCALSTORAGE_REMOVE,
   G_LOCALSTORAGE_CLEAR,
   G_LOCALSTORAGE_GET,

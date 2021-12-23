@@ -32,6 +32,7 @@ export type Method =
  */
 export default function axiosRequest(api: string, method: Method = 'GET', params: any = {}, maxRequestCycleCount: number = 1, headers: any = { 'Content-Type': 'application/json' }) {
 
+
   // 针对非GET请求进行限流拦截
   if (method !== 'GET') {
 
@@ -67,6 +68,13 @@ export default function axiosRequest(api: string, method: Method = 'GET', params
   return new Promise(async (resolve: any, reject: any) => {
 
     let token = await G_LOCALSTORAGE_GET('_TOKEN');
+    if (!G_HTTP_WHITELIST.includes(api) && !token) {
+
+      if (_PROPS) {
+        _PROPS.navigation.navigate('Login');
+      }
+      return false;
+    }
 
     let sendData: any = {
       method,

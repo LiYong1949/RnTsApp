@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import { View, ScrollView, Image, StyleSheet, RefreshControl } from 'react-native';
 import { Text } from '@/components/reactNative';
 import { Flex, List } from '@ant-design/react-native';
+import { inject, observer } from 'mobx-react';
 import AddressIcon from '../../assets/icon/address.png';
 import OrderIcon from '../../assets/icon/order.png';
 import SettingIcon from '../../assets/icon/setting.png';
@@ -13,12 +14,18 @@ export interface IStates {
   list: Array<any>,
 }
 
+@inject("appStore")
+@observer
+
 class Home extends Component<any, IStates>{
   constructor(props: any) {
     super(props);
+
+    const { appStore } = this.props;
+
     this.state = {
       isRefreshing: false,
-      userInfo: null,
+      userInfo: appStore.currentUserInfo,
       list: [
         {
           title: '地址管理',
@@ -37,10 +44,6 @@ class Home extends Component<any, IStates>{
         },
       ],
     };
-  }
-
-  componentDidMount() {
-    this.handleGetCurrentUserInfo();
   }
 
   // 下拉刷新

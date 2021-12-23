@@ -5,7 +5,7 @@ import React, { ReactNode } from 'react';
 import { View, Text, TouchableOpacity, StatusBar, StyleSheet } from 'react-native';
 import AntDesignIcons from 'react-native-vector-icons/AntDesign';
 
-interface IProps {
+export interface IProps {
   /** 状态栏 */
   statusBar?: ReactNode,
   /** 标题 */
