@@ -1,21 +1,22 @@
 /**
  * 通用组件navbar
  */
-import React, { ReactNode } from 'react';
-import { View, Text, TouchableOpacity, StatusBar, StyleSheet } from 'react-native';
+import React from 'react';
+import { View, TouchableOpacity, StatusBar, StyleSheet } from 'react-native';
+import { Text } from '@/components/reactNative';
 import AntDesignIcons from 'react-native-vector-icons/AntDesign';
 
 export interface IProps {
   /** 状态栏 */
-  statusBar?: ReactNode,
+  statusBar?: React.ReactNode,
   /** 标题 */
   title: string,
   /** 左侧内容 */
-  left?: ReactNode,
+  left?: React.ReactNode,
   /** 点击左侧 */
   onLeft?: () => void,
   /** 右侧内容 */
-  right?: ReactNode,
+  right?: React.ReactNode,
   /** 点击右侧 */
   onRight?: () => void,
 }
@@ -24,6 +25,19 @@ export interface IProps {
 const Home: React.FC<IProps> = (props: any) => {
   const { statusBar, title, left, onLeft, right, onRight } = props;
 
+  // 点击左侧
+  const handleClickLeft = () => {
+    if (onLeft) {
+      onLeft();
+    }
+  };
+
+  // 点击右侧
+  const handleClickRight = () => {
+    if (onRight) {
+      onRight();
+    }
+  };
 
   return (
     <View style={styles.navbarContainer}>
@@ -31,11 +45,11 @@ const Home: React.FC<IProps> = (props: any) => {
         {statusBar !== false && (statusBar ? statusBar : <StatusBar />)}
       </View>
       <View style={styles.navbarPanel}>
-        <TouchableOpacity style={styles.navbarLeft} onPress={left !== false && onLeft && onLeft()}>
-          {left !== false && (left ? left : <AntDesignIcons name='left' />)}
+        <TouchableOpacity style={styles.navbarLeft} onPress={handleClickLeft}>
+          {left !== false && (left ? left : <AntDesignIcons name='left' size={25} />)}
         </TouchableOpacity>
         <Text style={styles.navbarCenter}>{title}</Text>
-        <TouchableOpacity style={styles.navbarRight} onPress={right && onRight && onRight()}>
+        <TouchableOpacity style={styles.navbarRight} onPress={handleClickRight}>
           {right}
         </TouchableOpacity>
       </View>
@@ -45,21 +59,27 @@ const Home: React.FC<IProps> = (props: any) => {
 
 const styles = StyleSheet.create({
   navbarContainer: {
-    display: 'flex',
-    flexDirection: 'column',
   },
   navbarPanel: {
-    display: 'flex'
+    display: 'flex',
+    flexDirection: 'row',
+    height: 50,
   },
   navbarLeft: {
     flex: 1,
+    padding: 10,
+    justifyContent: 'center',
   },
   navbarCenter: {
-    flex: 3,
-    textAlign: 'center'
+    flex: 5,
+    fontSize: 18,
+    textAlign: 'center',
+    lineHeight: 50
   },
   navbarRight: {
-    flex: 1
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center'
   }
 });
 

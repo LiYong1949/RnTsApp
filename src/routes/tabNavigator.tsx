@@ -60,6 +60,7 @@ const TabNavigator = () => {
               tabBarLabel: tab.title,
               headerTitle: tab.title,
               headerTintColor: colorScheme === 'dark' ? 'white' : 'black',
+              headerTitleAlign: 'center', // title居中
               headerShown: tab.headerShown,
               tabBarIcon: ({ focused }) => (
                 <AntDesignIcons name={tab.icon} size={26} color={focused ? '#ff3141' : (colorScheme === 'dark' ? 'white' : 'black')} />

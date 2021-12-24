@@ -10,7 +10,7 @@ import api from "@/services/api";
 
 export interface IStates {
   isRefreshing: boolean,
-  list: Array<any>,
+  toolList: Array<any>,
 }
 
 @inject("appStore")
@@ -20,10 +20,9 @@ class Home extends Component<any, IStates>{
   constructor(props: any) {
     super(props);
 
-
     this.state = {
       isRefreshing: false,
-      list: [
+      toolList: [
         {
           title: '地址管理',
           url: 'AddressManager',
@@ -59,6 +58,8 @@ class Home extends Component<any, IStates>{
     const { appStore } = this.props;
 
     let res: any = await api.getUser();
+    console.log(res);
+
     if (res.errcode === 0) {
       await appStore.handleSetCurrentUserInfo(res.data);
     }
@@ -70,6 +71,7 @@ class Home extends Component<any, IStates>{
     navigation.navigate(url);
   }
 
+  // 点击头像（进入详情或登录）
   handleLinkUser = () => {
     const { appStore, navigation } = this.props;
     if (appStore.currentUserInfo) {
@@ -83,7 +85,7 @@ class Home extends Component<any, IStates>{
 
     let { currentUserInfo } = this.props.appStore;
 
-    const { list, isRefreshing } = this.state;
+    const { toolList, isRefreshing } = this.state;
 
     return (
       <ScrollView
@@ -120,7 +122,7 @@ class Home extends Component<any, IStates>{
 
         <List>
           {
-            list.map((item: any, index: number) => {
+            toolList.map((item: any, index: number) => {
               return <List.Item
                 key={index}
                 thumb={<Image style={styles.listIcon} source={item.icon} />}

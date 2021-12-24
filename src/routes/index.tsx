@@ -1,5 +1,5 @@
 import React from 'react';
-import { TouchableOpacity, useColorScheme } from 'react-native';
+import { TouchableOpacity, useColorScheme, View } from 'react-native';
 import { Provider } from 'mobx-react';
 import stores from '@/stores';
 import { createStackNavigator } from '@react-navigation/stack';
@@ -8,8 +8,9 @@ import AntDesignIcons from 'react-native-vector-icons/AntDesign';
 import TabNavigator from './tabNavigator';
 import LoginScreen from '@/pages/common/login';
 import UserInfoDetailScreen from '@/pages/user/detail';
-import AddressManagerScreen from '../pages/user/adress';
-import OrderScreen from '../pages/user/order';
+import AddressManagerScreen from '@/pages/user/adress';
+import UpdateAddressScreen from '@/pages/user/adress/update';
+import OrderScreen from '@/pages/user/order';
 import SettingSreen from '@/pages/user/setting';
 
 const Stack = createStackNavigator();
@@ -41,6 +42,12 @@ const router = [
     headerShown: true,
   },
   {
+    name: "UpdateAddress",
+    title: "编辑收货地址",
+    component: UpdateAddressScreen,
+    headerShown: false,
+  },
+  {
     name: "Order",
     title: "我的订单",
     component: OrderScreen,
@@ -60,7 +67,9 @@ const HeaderLeft = () => {
 
   return (
     <TouchableOpacity onPress={() => { navigation.canGoBack() && navigation.goBack(); }}>
-      <AntDesignIcons name='left' size={25} color={useColorScheme() === 'dark' ? 'white' : 'black'} />
+      <View style={{ paddingLeft: 10 }}>
+        <AntDesignIcons name='left' size={25} color={useColorScheme() === 'dark' ? 'white' : 'black'} />
+      </View>
     </TouchableOpacity>
   );
 };
@@ -84,6 +93,7 @@ const StackNavigator = () => {
                 <Stack.Screen key={index} name={item.name} component={item.component} options={({ route }) => ({
                   title: getChildTitle(route) || item.title,
                   headerTitle: getChildTitle(route) || item.title,
+                  headerTitleAlign: 'center',
                   headerLeft: HeaderLeft,
                   headerLeftLabelVisible: false, // 不显示header左侧文字
                   headerShown: item.headerShown, // 是否显示头部标题

@@ -9,12 +9,13 @@
  * @format
  */
 
-import React from 'react';
-import { Appearance } from 'react-native';
+import React, { useState } from 'react';
+import { Appearance, useColorScheme } from 'react-native';
 import Routes from './src/routes';
 import { Provider } from '@ant-design/react-native';
 import './src/config/globalDeclare.d';
 import global from './src/config/global';
+
 
 const App = () => {
 
@@ -29,15 +30,23 @@ const App = () => {
   G_HTTP_WHITELIST = global.G_HTTP_WHITELIST;
 
   // 颜色模式（明亮、暗黑）
-  let colorScheme = Appearance.getColorScheme();
+  let [colorScheme, setColorScheme] = useState<string>(useColorScheme());
 
+  Appearance.addChangeListener(() => {
+    setColorScheme(Appearance.getColorScheme());
+  });
 
   return (
+
+    // <Provider colorScheme={colorScheme}>
+    //   <Routes />
+    // </Provider>
     <Provider
       theme={{
         'color_text_base': colorScheme === 'dark' ? 'white' : 'black',
         'color_text_base_inverse': colorScheme === 'dark' ? 'black' : 'white',
         'fill_base': colorScheme === 'dark' ? 'black' : 'white',
+        'switch_fill': 'red'
       }}>
       <Routes />
     </Provider>

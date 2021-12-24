@@ -69,7 +69,6 @@ export default function axiosRequest(api: string, method: Method = 'GET', params
 
     let token = await G_LOCALSTORAGE_GET('_TOKEN');
     if (!G_HTTP_WHITELIST.includes(api) && !token) {
-
       if (_PROPS) {
         _PROPS.navigation.navigate('Login');
       }
